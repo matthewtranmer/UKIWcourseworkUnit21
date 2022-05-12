@@ -111,37 +111,14 @@ func (p *Pages) login(w http.ResponseWriter, r *http.Request, user_details *hand
 	fmt.Println("Called login")
 
 	if r.Method == "POST" {
-		stmt, err := p.db.Prepare("SELECT Password FROM UserData WHERE Username = ?")
-		if err != nil {
-			return handler.HTTPerror{Code: 500, Err: err}
-		}
-
-		err = r.ParseForm()
-		if err != nil {
-			return handler.HTTPerror{Code: 500, Err: err}
-		}
+		
 
 		username := r.PostForm["username"][0]
 		raw_password := r.PostForm["password"][0]
-		database_hash := new(string)
-
-		err = stmt.QueryRow(username).Scan(database_hash)
-		if err != nil {
-			data := LoginTemplateData{
-				user_details,
-				true,
-				"The username you entered does not exist!",
-			}
-
-			err := p.executeTemplates(w, "login.html", data)
-			if err != nil {
-				return handler.HTTPerror{Code: 500, Err: err}
-			}
-			return nil
-		}
-
-		err = bcrypt.CompareHashAndPassword([]byte(*database_hash), []byte(raw_password))
-		if err == nil {
+		password_hash = "hash"
+		
+		err = bcrypt.CompareHashAndPassword([]byte(password_hash), []byte(raw_password))
+		if err == nil && username == "matthew" {
 			fmt.Println("Authenticated")
 
 			err = loginUser(w, username)
@@ -182,117 +159,6 @@ func (p *Pages) login(w http.ResponseWriter, r *http.Request, user_details *hand
 	if err != nil {
 		return handler.HTTPerror{Code: 500, Err: err}
 	}
-	return nil
-}
-
-func saveFormImage(r *http.Request, key string, path string, username string) error {
-	form_file, headers, err := r.FormFile(key)
-	if err.Error() == "http: no such file" {
-		default_img, err := os.ReadFile(path + "/default/default.jpeg")
-		if err != nil {
-			return err
-		}
-
-		err = os.WriteFile(path+username+".jpeg", default_img, 0644)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-
-	if err != nil {
-		return err
-	}
-
-	buffer := make([]byte, headers.Size)
-	_, err = form_file.Read(buffer)
-	if err != nil {
-		return err
-	}
-
-	content_type := http.DetectContentType(buffer)
-
-	if content_type == "image/png" {
-		img, _ := png.Decode(bytes.NewReader(buffer))
-
-		jpg_buf := new(bytes.Buffer)
-		jpeg.Encode(jpg_buf, img, nil)
-
-		buffer = jpg_buf.Bytes()
-	} else if content_type != "image/jpeg" {
-		return errors.New("File type unsupported")
-	}
-
-	file, err := os.OpenFile(path+username+".jpeg", os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}
-
-	_, err = file.Write(buffer)
-	if err != nil {
-		return err
-	}
-
-	err = file.Close()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (p *Pages) signup(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
-	fmt.Println("Called signup")
-
-	if r.Method == "POST" {
-		stmt, err := p.db.Prepare("INSERT INTO UserData (Username, Password, Email, DOB, FirstName, LastName) VALUES (?, ?, ?, ?, ?, ?)")
-		if err != nil {
-			return handler.HTTPerror{Code: 500, Err: err}
-		}
-
-		err = r.ParseMultipartForm(1048576)
-		if err != nil {
-			return handler.HTTPerror{Code: 500, Err: err}
-		}
-
-		//will cause error if not sent
-		DOB := r.PostForm["dob-year"][0] + "-" + r.PostForm["dob-month"][0] + "-" + r.PostForm["dob-day"][0]
-		password_hash, err := bcrypt.GenerateFromPassword([]byte(r.PostForm["password"][0]), 12)
-		if err != nil {
-			return handler.HTTPerror{Code: 500, Err: err}
-		}
-
-		_, err = stmt.Exec(
-			r.PostForm["username"][0],
-			string(password_hash),
-			r.PostForm["email"][0],
-			DOB,
-			r.PostForm["firstname"][0],
-			r.PostForm["lastname"][0],
-		)
-		if err != nil {
-			return handler.HTTPerror{Code: 500, Err: err}
-		}
-
-		defer stmt.Close()
-
-		path := "/home/matthew/Websites/UKIWcoursework/static/profilepictures/"
-		err = saveFormImage(r, "pfp", path, r.PostForm["username"][0])
-		if err != nil {
-			return handler.HTTPerror{Code: 500, Err: err}
-		}
-
-		loginUser(w, r.PostForm["username"][0])
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return nil
-	}
-
-	err := p.executeTemplates(w, "signup.html", DefaultTemplateData{user_details})
-	if err != nil {
-		return handler.HTTPerror{Code: 500, Err: err}
-	}
-
 	return nil
 }
 
