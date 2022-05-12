@@ -1,0 +1,36 @@
+{{ define "content" }}
+
+<div class="form">
+    {{ if .Error }}
+    <div class="alert">
+        <span class="close_button" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{.Error_message}}
+    </div>
+    {{ end }}
+
+    <h1>Login</h1>
+    <label>Login to your UKIW account</label>
+    <br>
+
+    <form method="POST">
+        <div class="inputs">
+            <label for="username">Username:</label><br>
+            <input class="one-input" type="text" name="username"><br>
+
+            <label for="password">Password:</label><br>
+            <input type="password" name="password"><br>
+        </div>
+        <button type="submit">Login</button>
+
+        <br>
+        <hr style="width: 100%;">
+    </form>
+    <br>
+
+    <span style="font-size: 12px; border: 10px;">
+        Don't have an account? 
+        <a href="/signup">Sign Up</a>
+    </span>
+    
+</div>
+{{ end }}

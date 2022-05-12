@@ -1,0 +1,9 @@
+{{ define "content" }}
+
+{{ if .User_details }}
+<h1>Username: {{ .User_details.Username }}</h1>
+{{ end }}
+
+<a href="/logout">Logout</a>
+
+{{ end }}

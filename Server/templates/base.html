@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>UKIW Prototype</title>
+</head>
+
+<body>
+    <div class="topnav" id="topnav">
+      <a href="/" style="float: left; padding: 5px;" class="element logo"><img src="/static/img/UKIWlogo.jpeg" width="70" alt="Home"></a>
+      
+      {{ if .User_details }}
+      <div class="dropdown element hover">
+        <button class="dropbtn">
+            <img class="pfp dropbtn" src="/static/profilepictures/{{ .User_details.username }}.jpeg" alt="My Account" width="16" height="16">
+        </button>
+        <div class="dropdown-content pfpcontent">
+            <a href="/bills">My Bills</a>
+            <a href="/accounts/settings">Settings</a>
+            <a href="/accounts/logout">Log Out</a>
+        </div>
+      </div> 
+      {{ else }}
+      <a href="/accounts/signup" class="hover element">Sign Up</a>
+      <a href="/accounts/login" class="hover element">Login</a>
+      {{ end }}
+      
+      <a href="/search" class="hover element">Search</a>
+      <a href="/about" class="hover element">About Us</a>
+      
+      <div class="dropdown element hover">
+        <button class="dropbtn">Sales</button>
+        <div class="dropdown-content">
+            <a href="/sales/shops">Shops</a>
+            <a href="/sales/boats">Boats</a>
+        </div>
+      </div> 
+      
+      <a href="/ourmarinas" class="hover element">Our Marinas</a>
+      
+      <a href="javascript:void(0);" class="icon element" onclick="verticalMenu()">
+        <img src="/static/img/icon.jpeg" width="17">
+      </a>
+    </div>
+
+    {{ template "content" .}}
+
+    <script src="static/js/base.js"></script> 
+</body>
+</html>
