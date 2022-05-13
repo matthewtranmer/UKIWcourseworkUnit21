@@ -1,102 +1,27 @@
 package Handler
 
 import (
-	signing "UKIWcoursework/Server/Signing"
-	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
-	"strconv"
-	"time"
 )
 
 type UserDetails struct {
 	Username string
 }
 
-var errTokenInvalid error = errors.New("the given token is invalid")
-var errTokenExpired error = errors.New("the given token is expired")
-
-type Token struct {
-	Username   string
-	Expiration string
-	Signature  string
-	Public_key string
-}
-
-func ParseToken(cookie *http.Cookie) (*Token, error) {
-	if cookie == nil || cookie.Value == "null" {
-		return nil, nil
-	}
-
-	unescaped_token, err := url.PathUnescape(cookie.Value)
-	if err != nil {
-		return nil, err
-	}
-
-	json_token := []byte(unescaped_token)
-
-	token := new(Token)
-	err = json.Unmarshal(json_token, token)
-	if err != nil {
-		return nil, err
-	}
-
-	return token, nil
-}
-
-func GenerateSignatureToken(token *Token) ([]byte, error) {
-	payload := map[string]string{
-		"username":   token.Username,
-		"expiration": token.Expiration,
-	}
-
-	json_payload, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
-
-	return json_payload, err
-}
-
 func checkToken(cookie *http.Cookie) (user_details *UserDetails, err error) {
-	token, err := ParseToken(cookie)
-	if err != nil {
-		return nil, err
-	}
-
-	if token == nil {
+	if cookie == nil {
+		fmt.Println("nil cookie")
 		return nil, nil
 	}
 
-	expiration, err := strconv.Atoi(token.Expiration)
-	if err != nil {
-		return nil, err
+	if cookie.Value == "logged_in" {
+		user_details = &UserDetails{"matthew"}
+		return user_details, nil
 	}
 
-	if expiration < int(time.Now().Unix()) {
-		fmt.Println("Expired")
-		return nil, errTokenExpired
-	}
-
-	json_payload, err := GenerateSignatureToken(token)
-	if err != nil {
-		return nil, err
-	}
-
-	verified, err := signing.VerifySignature(string(json_payload), token.Signature, token.Public_key)
-	if err != nil {
-		return nil, err
-	}
-
-	if !verified {
-		return nil, errTokenInvalid
-	}
-
-	user_details = &UserDetails{token.Username}
-	return user_details, nil
+	return nil, nil
 }
 
 type Handler struct {
@@ -106,16 +31,13 @@ type Handler struct {
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	cookie, _ := r.Cookie("auth_token")
+
+	fmt.Println((r.Cookies()))
+
 	user_details, err := checkToken(cookie)
 
-	if err == errTokenExpired || err == errTokenInvalid {
-		cookie := new(http.Cookie)
-		cookie.Name = "auth_token"
-		cookie.Value = "null"
-
-		http.SetCookie(w, cookie)
-		//we have fixed the error
-		err = nil
+	if user_details == nil {
+		fmt.Println("No user details!")
 	}
 
 	if user_details == nil && h.Require_login {
