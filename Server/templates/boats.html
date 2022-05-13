@@ -1,5 +1,18 @@
 {{ define "content" }}
 
-<h1>Boats</h1>
+<h1>Boat Market</h1>
+Browse our selection of boats for sale
+
+<div>
+	{{ range .Boats }}
+	<span class="boaticon">
+		{{.Name}}
+		<br>
+		{{.Image}}
+	</span>
+	{{ end }}
+	
+	
+</div>
 
 {{ end }}

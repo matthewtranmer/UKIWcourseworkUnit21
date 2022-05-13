@@ -1,7 +1,6 @@
 package Handler
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -12,7 +11,6 @@ type UserDetails struct {
 
 func checkToken(cookie *http.Cookie) (user_details *UserDetails, err error) {
 	if cookie == nil {
-		fmt.Println("nil cookie")
 		return nil, nil
 	}
 
@@ -31,17 +29,10 @@ type Handler struct {
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	cookie, _ := r.Cookie("auth_token")
-
-	fmt.Println((r.Cookies()))
-
 	user_details, err := checkToken(cookie)
 
-	if user_details == nil {
-		fmt.Println("No user details!")
-	}
-
 	if user_details == nil && h.Require_login {
-		url := "/login?return=" + r.URL.Path
+		url := "/accounts/login?return=" + r.URL.Path
 		http.Redirect(w, r, url, http.StatusSeeOther)
 		return
 	}

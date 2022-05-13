@@ -257,6 +257,17 @@ body{
   display: block;
 }
 
+h1{
+  margin-bottom: 5px;
+}
+
+.boaticon{
+  background-color: gray;
+  float: left;
+  padding: 5px;
+  margin-right: 5px;
+}
+
 /*
 .map{
     margin-left: 5px;

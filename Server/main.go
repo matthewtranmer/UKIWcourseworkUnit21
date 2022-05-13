@@ -41,8 +41,6 @@ func (p *Pages) home(w http.ResponseWriter, r *http.Request, user_details *handl
 		return handler.HTTPerror{Code: 404, Err: nil}
 	}
 
-	fmt.Println("Called Home")
-
 	err := p.executeTemplates(w, "home.html", DefaultTemplateData{user_details})
 	if err != nil {
 		return handler.HTTPerror{Code: 500, Err: err}
@@ -141,13 +139,13 @@ func (p *Pages) myaccount(w http.ResponseWriter, r *http.Request, user_details *
 	return nil
 }
 
-func (p *Pages) logout(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
+func (p *Pages) logout(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {	
 	cookie := new(http.Cookie)
 	cookie.Name = "auth_token"
 	cookie.Value = "null"
+	cookie.Path = "/"
 
 	http.SetCookie(w, cookie)
-
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 
 	return nil
@@ -180,8 +178,20 @@ func (p *Pages) shops(w http.ResponseWriter, r *http.Request, user_details *hand
 	return nil
 }
 
+type BoatTemplateData struct{
+	User_details  *handler.UserDetails
+	Boats []Boat
+}
+
+type Boat struct{
+	Name string
+	Image string
+}
+
 func (p *Pages) boats(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
-	err := p.executeTemplates(w, "boats.html", DefaultTemplateData{user_details})
+    boat_storage := []Boat{Boat{"Boat 1", "Image 1"}, Boat{"Boat 2", "Image 2"}}
+	
+	err := p.executeTemplates(w, "boats.html", BoatTemplateData{user_details, boat_storage})
 	if err != nil {
 		return handler.HTTPerror{Code: 500, Err: err}
 	}
@@ -215,8 +225,8 @@ func main() {
 
 	//testng only
 	//fs := http.FileServer(http.Dir("/home/matthew/Websites/UKIWcoursework/static"))
-	fs := http.FileServer(http.Dir("C:/Users/Matthew/Desktop/github.com/matthewtranmer/UKIWcourseworkUnit21/static"))
-	http.Handle("/static/", http.StripPrefix("/static", fs))
+	//fs := http.FileServer(http.Dir("C:/Users/Matthew/Desktop/github.com/matthewtranmer/UKIWcourseworkUnit21/static"))
+	//http.Handle("/static/", http.StripPrefix("/static", fs))
 
 	//General Services
 	http.Handle("/", handler.Handler{Middleware: pages.home, Require_login: false})
