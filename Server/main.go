@@ -189,7 +189,7 @@ type Boat struct {
 }
 
 func (p *Pages) boats(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
-	boat_storage := []Boat{{"Boat 1", "Image 1"}, {"Boat 2", "Image 2"}, {"Boat 3", "Image 3"}, {"Boat 4", "Image 4"}}
+	boat_storage := []Boat{{"Boat 0", "0"}, {"Boat 1", "1"}, {"Boat 2", "2"}, {"Boat 3", "3"}, {"Boat 4", "4"}, {"Boat 5", "5"}}
 
 	err := p.executeTemplates(w, "boats.html", BoatTemplateData{user_details, boat_storage})
 	if err != nil {
@@ -225,8 +225,8 @@ func main() {
 
 	//testng only
 	//fs := http.FileServer(http.Dir("/home/matthew/Websites/UKIWcoursework/static"))
-	//fs := http.FileServer(http.Dir("C:/Users/Matthew/Desktop/github.com/matthewtranmer/UKIWcourseworkUnit21/static"))
-	//http.Handle("/static/", http.StripPrefix("/static", fs))
+	fs := http.FileServer(http.Dir("C:/Users/Matthew/Desktop/github.com/matthewtranmer/UKIWcourseworkUnit21/static"))
+	http.Handle("/static/", http.StripPrefix("/static", fs))
 
 	//General Services
 	http.Handle("/", handler.Handler{Middleware: pages.home, Require_login: false})
@@ -244,5 +244,4 @@ func main() {
 
 	fmt.Println("Server Started!")
 	http.ListenAndServe("127.0.0.1:8000", nil)
-
 }

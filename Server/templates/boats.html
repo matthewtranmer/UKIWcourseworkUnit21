@@ -3,19 +3,24 @@
 <h1>Boat Market</h1>
 Browse our selection of boats for sale
 
+<br>
+
 <div>
+<div class="boats" id="boats">
 	{{ range .Boats }}
-	<span class="boaticon">
-		{{.Image}}
-		<br>
-		<img src="" alt="" width="200" height="200">
-		
-		<hr>
-		{{.Name}}
-		<br>
-		<button class="boatviewbutton">View</button>
-	</span>
+		<span class="boaticon">
+			<br>
+			<img src="/static/boatsforsale/{{.Image}}.jpg" alt="Image Unavailable" width="300" height="300">
+			
+			<hr>
+			{{.Name}}
+			<br>
+			<button class="boatviewbutton">View</button>
+		</span>
 	{{ end }}
 </div>
+</div>
+<script src="/static/js/boats.js"></script>
+
 
 {{ end }}

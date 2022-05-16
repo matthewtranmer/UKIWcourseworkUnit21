@@ -262,10 +262,11 @@ h1{
 }
 
 .boaticon{
+  display: inline-block;
   background-color: gray;
-  float: left;
   padding: 10px;
   margin-right: 10px;
+  margin-bottom: 10px;
 
 
   border: solid;
@@ -279,6 +280,11 @@ h1{
   border-color: white;
   border: solid;
   border-radius: 5px;
+}
+
+.boats{
+  display: inline;
+
 }
 
 /*
