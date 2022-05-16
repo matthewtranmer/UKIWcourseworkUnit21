@@ -264,8 +264,21 @@ h1{
 .boaticon{
   background-color: gray;
   float: left;
-  padding: 5px;
-  margin-right: 5px;
+  padding: 10px;
+  margin-right: 10px;
+
+
+  border: solid;
+  border-color: #636363;
+  border-width: 1px;
+  border-radius: 5px;
+}
+
+.boatviewbutton{
+  background-color: white;
+  border-color: white;
+  border: solid;
+  border-radius: 5px;
 }
 
 /*

@@ -6,13 +6,16 @@ Browse our selection of boats for sale
 <div>
 	{{ range .Boats }}
 	<span class="boaticon">
+		{{.Image}}
+		<br>
+		<img src="" alt="" width="200" height="200">
+		
+		<hr>
 		{{.Name}}
 		<br>
-		{{.Image}}
+		<button class="boatviewbutton">View</button>
 	</span>
 	{{ end }}
-	
-	
 </div>
 
 {{ end }}

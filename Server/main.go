@@ -37,7 +37,7 @@ type DefaultTemplateData struct {
 
 func (p *Pages) home(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
 	if r.URL.Path != "/" {
-		fmt.Println(time.Now().Local().String() + " Page Not Found")
+		fmt.Println(time.Now().Local().String() + " " + r.URL.Path + " Page Not Found")
 		return handler.HTTPerror{Code: 404, Err: nil}
 	}
 
@@ -139,7 +139,7 @@ func (p *Pages) myaccount(w http.ResponseWriter, r *http.Request, user_details *
 	return nil
 }
 
-func (p *Pages) logout(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {	
+func (p *Pages) logout(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
 	cookie := new(http.Cookie)
 	cookie.Name = "auth_token"
 	cookie.Value = "null"
@@ -178,19 +178,19 @@ func (p *Pages) shops(w http.ResponseWriter, r *http.Request, user_details *hand
 	return nil
 }
 
-type BoatTemplateData struct{
-	User_details  *handler.UserDetails
-	Boats []Boat
+type BoatTemplateData struct {
+	User_details *handler.UserDetails
+	Boats        []Boat
 }
 
-type Boat struct{
-	Name string
+type Boat struct {
+	Name  string
 	Image string
 }
 
 func (p *Pages) boats(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
-    boat_storage := []Boat{Boat{"Boat 1", "Image 1"}, Boat{"Boat 2", "Image 2"}}
-	
+	boat_storage := []Boat{{"Boat 1", "Image 1"}, {"Boat 2", "Image 2"}, {"Boat 3", "Image 3"}, {"Boat 4", "Image 4"}}
+
 	err := p.executeTemplates(w, "boats.html", BoatTemplateData{user_details, boat_storage})
 	if err != nil {
 		return handler.HTTPerror{Code: 500, Err: err}
