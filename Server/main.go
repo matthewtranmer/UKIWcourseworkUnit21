@@ -190,7 +190,7 @@ type Boat struct {
 }
 
 func (p *Pages) boats(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
-	boat_storage := []Boat{{"Boat 0", "0", "£600"}, {"Boat 1", "1", "£1900"}, {"Boat 2", "2", "£1400"}, {"Boat 3", "3", "£6000"}, {"Boat 4", "4", "£1000"}, {"Boat 5", "5",  "£49,999"}}
+	boat_storage := []Boat{{"Boat 0", "0", "£600"}, {"Boat 1", "1", "£1900"}, {"Boat 2", "2", "£1400"}, {"Boat 3", "3", "£6000"}, {"Boat 4", "4", "£1000"}, {"Boat 5", "5", "£49,999"}, {"Boat 6", "6", "£4,000"}}
 
 	err := p.executeTemplates(w, "boats.html", BoatTemplateData{user_details, boat_storage})
 	if err != nil {
@@ -218,6 +218,15 @@ func (p *Pages) signup(w http.ResponseWriter, r *http.Request, user_details *han
 	return nil
 }
 
+func (p *Pages) claydonmarina(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
+	err := p.executeTemplates(w, "claydonmarina.html", DefaultTemplateData{user_details})
+	if err != nil {
+		return handler.HTTPerror{Code: 500, Err: err}
+	}
+
+	return nil
+}
+
 func main() {
 	log.SetOutput(os.Stdout)
 
@@ -233,6 +242,7 @@ func main() {
 	http.Handle("/", handler.Handler{Middleware: pages.home, Require_login: false})
 	http.Handle("/about", handler.Handler{Middleware: pages.about, Require_login: false})
 	http.Handle("/ourmarinas", handler.Handler{Middleware: pages.ourmarinas, Require_login: false})
+	http.Handle("/ourmarinas/claydon", handler.Handler{Middleware: pages.claydonmarina, Require_login: false})
 	http.Handle("/sales/shops", handler.Handler{Middleware: pages.shops, Require_login: false})
 	http.Handle("/sales/boats", handler.Handler{Middleware: pages.boats, Require_login: false})
 	http.Handle("/search", handler.Handler{Middleware: pages.search, Require_login: false})
