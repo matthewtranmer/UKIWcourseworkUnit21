@@ -160,15 +160,6 @@ func (p *Pages) about(w http.ResponseWriter, r *http.Request, user_details *hand
 	return nil
 }
 
-func (p *Pages) ourmarinas(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
-	err := p.executeTemplates(w, "ourmarinas.html", DefaultTemplateData{user_details})
-	if err != nil {
-		return handler.HTTPerror{Code: 500, Err: err}
-	}
-
-	return nil
-}
-
 func (p *Pages) shops(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
 	err := p.executeTemplates(w, "shops.html", DefaultTemplateData{user_details})
 	if err != nil {
@@ -241,8 +232,7 @@ func main() {
 	//General Services
 	http.Handle("/", handler.Handler{Middleware: pages.home, Require_login: false})
 	http.Handle("/about", handler.Handler{Middleware: pages.about, Require_login: false})
-	http.Handle("/ourmarinas", handler.Handler{Middleware: pages.ourmarinas, Require_login: false})
-	http.Handle("/ourmarinas/claydon", handler.Handler{Middleware: pages.claydonmarina, Require_login: false})
+	http.Handle("/claydonmarina", handler.Handler{Middleware: pages.claydonmarina, Require_login: false})
 	http.Handle("/sales/shops", handler.Handler{Middleware: pages.shops, Require_login: false})
 	http.Handle("/sales/boats", handler.Handler{Middleware: pages.boats, Require_login: false})
 	http.Handle("/search", handler.Handler{Middleware: pages.search, Require_login: false})
