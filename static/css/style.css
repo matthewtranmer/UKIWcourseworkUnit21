@@ -78,6 +78,8 @@
   font-family: inherit;
   margin: 0;
   padding: 0;
+  text-decoration: none;
+  color: #000;
 }
 
 .dropdown-content {
@@ -107,10 +109,6 @@
   display: block;
   position: fixed;
 }
-
-
-
-
 
 
 /* Form stylings */
@@ -375,26 +373,3 @@ h1{
   text-align: center;
   float: left;
 }
-
-/*
-.map{
-    margin-left: 5px;
-    
-    width: 50%;
-    float: right;
-    height: 600px;
-}
-
-
-
-.textbox{
-    word-wrap: break-word;
-    width: 45%;
-    
-    background-color: rgba(255, 255, 255, 0.3);
-    padding: 15px;
-    margin-bottom: 30px;
-    margin-left: 40px;
-    display: inline-block;
-}
-*/
