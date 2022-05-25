@@ -218,6 +218,15 @@ func (p *Pages) claydonmarina(w http.ResponseWriter, r *http.Request, user_detai
 	return nil
 }
 
+func (p *Pages) bills(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
+	err := p.executeTemplates(w, "bills.html", DefaultTemplateData{user_details})
+	if err != nil {
+		return handler.HTTPerror{Code: 500, Err: err}
+	}
+
+	return nil
+}
+
 func main() {
 	log.SetOutput(os.Stdout)
 
@@ -242,6 +251,7 @@ func main() {
 	http.Handle("/accounts/login", handler.Handler{Middleware: pages.login, Require_login: false})
 	http.Handle("/accounts/myaccount", handler.Handler{Middleware: pages.myaccount, Require_login: true})
 	http.Handle("/accounts/logout", handler.Handler{Middleware: pages.logout, Require_login: true})
+	http.Handle("/accounts/bills", handler.Handler{Middleware: pages.bills, Require_login: true})
 
 	fmt.Println("Server Started!")
 	http.ListenAndServe("127.0.0.1:8000", nil)
