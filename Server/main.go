@@ -182,7 +182,6 @@ type Boat struct {
 
 func (p *Pages) boats(w http.ResponseWriter, r *http.Request, user_details *handler.UserDetails) handler.ErrorResponse {
 	boat_storage := []Boat{{"Boat 0", "0", "£600"}, {"Boat 1", "1", "£1900"}, {"Boat 2", "2", "£1400"}, {"Boat 3", "3", "£6000"}, {"Boat 4", "4", "£1000"}, {"Boat 5", "5", "£49,999"}, {"Boat 6", "6", "£4,000"}}
-
 	err := p.executeTemplates(w, "boats.html", BoatTemplateData{user_details, boat_storage})
 	if err != nil {
 		return handler.HTTPerror{Code: 500, Err: err}
