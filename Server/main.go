@@ -86,7 +86,8 @@ func (p *Pages) login(w http.ResponseWriter, r *http.Request, user_details *hand
 		}
 
 		raw_password := r.PostForm["password"][0]
-		password_hash := "$2a$12$taAixFiqtyyl1d7dyi4FUeQ39Av4JgGRHEKLYmg407JzVpbMnTpMO"
+		//matthew - testing only
+		password_hash := "$2a$12$8l0Y3aEgv0Qyq4M87BBjaO7XxMN6lem6TKMphA8Tod5TfD.TFu.Ou"
 
 		err := bcrypt.CompareHashAndPassword([]byte(password_hash), []byte(raw_password))
 		if err == nil {
